@@ -15,4 +15,23 @@ function calcular() {
 
     let etiquetaCapacidad = document.getElementById("spnCapacidadPago");
     etiquetaCapacidad.textContent = capacidadPago;
+
+    let cajaMonto = document.getElementById("txtMonto").value;
+    let monto = parseInt(cajaMonto);
+
+    let cajaPlazo = document.getElementById("txtPlazo").value;
+    let plazo = parseInt(cajaPlazo);
+
+    let cajaTasa = document.getElementById("txtTasaInteres").value;
+    let tasa = parseInt(cajaTasa);
+
+    let interesPagar = calcularInteresSimple(monto, tasa, plazo);
+
+    let etiquetaInteres = document.getElementById("spnInteresPagar");
+    etiquetaInteres.textContent = interesPagar;
+    
+    let totalPrestamo = calcularTotalPagar(monto, interesPagar);
+
+    let etiquetaTotal = document.getElementById("spnTotalPrestamo");
+    etiquetaTotal.textContent = totalPrestamo;
 }
