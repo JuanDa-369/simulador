@@ -1,51 +1,75 @@
-
 function calcular() {
-    const ingresos = parseFloat(document.getElementById("txtIngresos").value);
-    const egresos = parseFloat(document.getElementById("txtEgresos").value);
-    const monto = parseInt(document.getElementById("txtMonto").value, 10);
-    const plazo = parseInt(document.getElementById("txtPlazo").value, 10);
-    const tasa = parseInt(document.getElementById("txtTasaInteres").value, 10);
+    // Limpiar errores previos
+    document.getElementById("errorIngresos").textContent = "";
+    document.getElementById("errorEgresos").textContent = "";
+    document.getElementById("errorMonto").textContent = "";
+    document.getElementById("errorPlazo").textContent = "";
+    document.getElementById("errorTasaInteres").textContent = "";
 
-    const mensajeError = document.getElementById("lblMensajeError");
-    const estadoCredito = document.getElementById("spnEstadoCredito");
-    const panelEstado = estadoCredito.closest(".estado-credito");
+    let valorIngresos = document.getElementById("txtIngresos").value.trim();
+    let valorEgresos = document.getElementById("txtEgresos").value.trim();
+    let valorMonto = document.getElementById("txtMonto").value.trim();
+    let valorPlazo = document.getElementById("txtPlazo").value.trim();
+    let valorTasa = document.getElementById("txtTasaInteres").value.trim();
 
-    mensajeError.textContent = "";
-    mensajeError.classList.remove("visible");
+    let hayError = false;
 
-    const valores = [ingresos, egresos, monto, plazo, tasa];
+    // Validaciones campo por campo
+    if (valorIngresos === "" || isNaN(valorIngresos) || parseFloat(valorIngresos) < 0) {
+        document.getElementById("errorIngresos").textContent = "Ingrese un valor numérico válido (mayor o igual a 0).";
+        hayError = true;
+    }
+    if (valorEgresos === "" || isNaN(valorEgresos) || parseFloat(valorEgresos) < 0) {
+        document.getElementById("errorEgresos").textContent = "Ingrese un valor numérico válido (mayor o igual a 0).";
+        hayError = true;
+    }
+    if (valorMonto === "" || isNaN(valorMonto) || parseFloat(valorMonto) <= 0) {
+        document.getElementById("errorMonto").textContent = "Ingrese un monto mayor a 0.";
+        hayError = true;
+    }
+    if (valorPlazo === "" || isNaN(valorPlazo) || parseInt(valorPlazo) <= 0) {
+        document.getElementById("errorPlazo").textContent = "Ingrese un plazo en años válido.";
+        hayError = true;
+    }
+    if (valorTasa === "" || isNaN(valorTasa) || parseFloat(valorTasa) < 0) {
+        document.getElementById("errorTasaInteres").textContent = "Ingrese una tasa de interés válida (>= 0).";
+        hayError = true;
+    }
 
-    if (valores.some(valor => !Number.isFinite(valor))) {
-        mensajeError.textContent = "Completa todos los campos con valores numéricos válidos.";
-        mensajeError.classList.add("visible");
+    if (hayError) {
         return;
     }
 
-    if (ingresos < 0 || egresos < 0 || monto <= 0 || plazo <= 0 || tasa < 0) {
-        mensajeError.textContent = "Los ingresos y egresos no pueden ser negativos. El monto y el plazo deben ser mayores que cero; la tasa no puede ser negativa.";
-        mensajeError.classList.add("visible");
-        return;
+    // Conversiones y cálculos
+    let ingresos = parseFloat(valorIngresos);
+    let egresos = parseFloat(valorEgresos);
+    let monto = parseInt(valorMonto);
+    let plazo = parseInt(valorPlazo);
+    let tasa = parseInt(valorTasa);
+
+    let totalDisponible = calcularDisponible(ingresos, egresos);
+    document.getElementById("spnDisponible").textContent = "USD " + totalDisponible.toFixed(2);
+
+    let capacidadPago = calcularCapacidadPago(totalDisponible);
+    document.getElementById("spnCapacidadPago").textContent = "USD " + capacidadPago.toFixed(2);
+
+    let interesPagar = calcularInteresSimple(monto, tasa, plazo);
+    document.getElementById("spnInteresPagar").textContent = "USD " + interesPagar.toFixed(2);
+
+    let totalPrestamo = calcularTotalPagar(monto, interesPagar);
+    document.getElementById("spnTotalPrestamo").textContent = "USD " + totalPrestamo.toFixed(2);
+
+    let cuota = calcularCuotaMensual(totalPrestamo, plazo);
+    document.getElementById("spnCuotaMensual").textContent = "USD " + cuota.toFixed(2);
+
+    let esAprobado = aprobarCredito(capacidadPago, cuota);
+    let etiquetaEstado = document.getElementById("spnEstadoCredito");
+    
+    if (esAprobado == true) {
+        etiquetaEstado.textContent = "CRÉDITO APROBADO";
+    } else {
+        etiquetaEstado.textContent = "CRÉDITO RECHAZADO";
     }
-
-    const totalDisponible = calcularDisponible(ingresos, egresos);
-    const capacidadPago = calcularCapacidadPago(totalDisponible);
-    const interesPagar = calcularInteresSimple(monto, tasa, plazo);
-    const totalPagar = calcularTotalPagar(monto, interesPagar);
-    const cuotaMensual = calcularCuotaMensual(totalPagar, plazo);
-    const aprobado = aprobarCredito(capacidadPago, cuotaMensual);
-
-    const formatoUSD = valor => "USD " + valor.toFixed(2);
-
-    document.getElementById("lblDisponibleValor").textContent = formatoUSD(totalDisponible);
-    document.getElementById("lblCapacidadValor").textContent = formatoUSD(capacidadPago);
-    document.getElementById("lblInteresValor").textContent = formatoUSD(interesPagar);
-    document.getElementById("lblTotalValor").textContent = formatoUSD(totalPagar);
-    document.getElementById("lblCuotaValor").textContent = formatoUSD(cuotaMensual);
-
-    estadoCredito.textContent = aprobado ? "CREDITO APROBADO" : "CREDITO RECHAZADO";
-
-    panelEstado.classList.remove("aprobado", "rechazado");
-    panelEstado.classList.add(aprobado ? "aprobado" : "rechazado");
 }
 
 function reiniciar() {
@@ -55,17 +79,16 @@ function reiniciar() {
     document.getElementById("txtPlazo").value = "";
     document.getElementById("txtTasaInteres").value = "";
 
-    document.getElementById("lblDisponibleValor").textContent = "USD 0.00";
-    document.getElementById("lblCapacidadValor").textContent = "USD 0.00";
-    document.getElementById("lblInteresValor").textContent = "USD 0.00";
-    document.getElementById("lblTotalValor").textContent = "USD 0.00";
-    document.getElementById("lblCuotaValor").textContent = "USD 0.00";
+    document.getElementById("errorIngresos").textContent = "";
+    document.getElementById("errorEgresos").textContent = "";
+    document.getElementById("errorMonto").textContent = "";
+    document.getElementById("errorPlazo").textContent = "";
+    document.getElementById("errorTasaInteres").textContent = "";
 
-    const estadoCredito = document.getElementById("spnEstadoCredito");
-    estadoCredito.textContent = "PENDIENTE DE CÁLCULO";
-    estadoCredito.closest(".estado-credito").classList.remove("aprobado", "rechazado");
-
-    const mensajeError = document.getElementById("lblMensajeError");
-    mensajeError.textContent = "";
-    mensajeError.classList.remove("visible");
+    document.getElementById("spnDisponible").textContent = "USD 0.00";
+    document.getElementById("spnCapacidadPago").textContent = "USD 0.00";
+    document.getElementById("spnInteresPagar").textContent = "USD 0.00";
+    document.getElementById("spnTotalPrestamo").textContent = "USD 0.00";
+    document.getElementById("spnCuotaMensual").textContent = "USD 0.00";
+    document.getElementById("spnEstadoCredito").textContent = "ANALIZANDO...";
 }
