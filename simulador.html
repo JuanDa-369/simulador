@@ -1,48 +1,188 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Crédito</title>
+    <meta name="theme-color" content="#10243a">
+    <title>NEXORA Financiera | Simulador de Crédito</title>
     <link rel="stylesheet" href="simulador.css">
-    <script src="funciones.js"></script>
-    <script src="simulador.js"></script>
+    <script src="funciones.js" defer></script>
+    <script src="simulador.js" defer></script>
 </head>
 <body>
+    <main class="container">
+        <header class="encabezado">
+            <div class="marca">
+                <div class="logo" aria-hidden="true">
+                    <svg viewBox="0 0 48 48">
+                        <path d="M8 34V14h7l18 20V14h7v20h-7L15 14v20z" fill="currentColor"/>
+                        <path d="M8 39h32" stroke="#28c997" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="marca-texto">
+                    <span class="nombre-marca">NEXORA</span>
+                    <span class="submarca">FINANCIERA</span>
+                </div>
+            </div>
 
-    <div class="container">
-        <h1>Simulador de Crédito</h1>
+            <div class="etiqueta-seguridad">
+                <span class="punto-seguridad"></span>
+                Simulador financiero
+            </div>
 
-        <h2>Datos financieros</h2>
-        <label for="txtIngresos">Ingresos:</label>
-        <input type="text" id="txtIngresos">
+            <div class="presentacion">
+                <span class="sobretitulo">PLANIFICACIÓN FINANCIERA</span>
+                <h1>Simulador de Crédito</h1>
+                <p>Calcula tu disponible mensual, tu capacidad de pago y los valores estimados de tu crédito.</p>
+            </div>
+        </header>
 
-        <label for="txtEgresos">Egresos:</label>
-        <input type="text" id="txtEgresos">
+        <section class="contenido">
+            <div class="seccion-titulo">
+                <span class="numero-seccion">01</span>
+                <div>
+                    <h2>Datos financieros</h2>
+                    <p>Ingresa tus valores mensuales.</p>
+                </div>
+            </div>
 
-        <p>Disponible: <span id="spnDisponible"></span></p>
-        <p>Capacidad de pago mensual: <span id="spnCapacidadPago"></span></p>
+            <div class="campos-grid">
+                <div class="campo">
+                    <label for="txtIngresos">Ingresos:</label>
+                    <div class="entrada">
+                        <span class="simbolo">USD</span>
+                        <input type="number" id="txtIngresos" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+                    </div>
+                </div>
 
-        <h2>Solicitud de crédito</h2>
-        <label for="txtMonto">Monto:</label>
-        <input type="text" id="txtMonto">
+                <div class="campo">
+                    <label for="txtEgresos">Egresos:</label>
+                    <div class="entrada">
+                        <span class="simbolo">USD</span>
+                        <input type="number" id="txtEgresos" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+                    </div>
+                </div>
+            </div>
 
-        <label for="txtPlazo">Plazo en años:</label>
-        <input type="text" id="txtPlazo">
+            <div class="resumen-financiero">
+                <div class="resumen-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+                        <path d="M3 9h18M7 14h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="resumen-datos">
+                    <span class="texto-secundario">Disponible mensual</span>
+                    <strong id="lblDisponibleValor" class="valor-principal">USD 0.00</strong>
+                </div>
+                <div class="resumen-capacidad">
+                    <span>Capacidad de pago</span>
+                    <strong id="lblCapacidadValor">USD 0.00</strong>
+                    <small>Mensual</small>
+                </div>
+            </div>
 
-        <label for="txtTasaInteres">Tasa de interés:</label>
-        <input type="text" id="txtTasaInteres">
+            <div class="separador"></div>
 
-        <p>Interés a pagar: <span id="spnInteresPagar"></span></p>
-        <p>Total préstamo: <span id="spnTotalPrestamo"></span></p>
-        <p>Cuota mensual: <span id="spnCuotaMensual"></span></p>
-        <p>Estado de crédito: <span id="spnEstadoCredito">ANALIZANDO...</span></p>
+            <div class="seccion-titulo">
+                <span class="numero-seccion">02</span>
+                <div>
+                    <h2>Solicitud de crédito</h2>
+                    <p>Completa los datos de tu solicitud.</p>
+                </div>
+            </div>
 
-        <div class="buttons">
-            <button id="btnCalcularCredito" onclick="calcular()">Calcular Crédito</button>
-            <button id="btnReiniciar">Reiniciar</button>
-        </div>
-    </div>
+            <div class="campos-grid">
+                <div class="campo">
+                    <label for="txtMonto">Monto solicitado:</label>
+                    <div class="entrada">
+                        <span class="simbolo">USD</span>
+                        <input type="number" id="txtMonto" min="1" step="1" placeholder="0" inputmode="numeric">
+                    </div>
+                </div>
 
+                <div class="campo">
+                    <label for="txtPlazo">Plazo en años:</label>
+                    <div class="entrada">
+                        <input type="number" id="txtPlazo" min="1" step="1" placeholder="Ej. 2" inputmode="numeric">
+                        <span class="sufijo">años</span>
+                    </div>
+                </div>
+
+                <div class="campo campo-completo">
+                    <label for="txtTasaInteres">Tasa anual simple:</label>
+                    <div class="entrada">
+                        <input type="number" id="txtTasaInteres" min="0" step="1" placeholder="Ej. 10" inputmode="numeric">
+                        <span class="sufijo">% anual</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nota-informativa">
+                <span class="nota-icono">i</span>
+                <p>Los resultados son una simulación basada en los datos ingresados y no representan una aprobación formal de crédito.</p>
+            </div>
+
+            <div class="acciones">
+                <button type="button" id="btnCalcularCredito" class="btn-principal" onclick="calcular()">
+                    Calcular Crédito
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button type="button" id="btnReiniciar" class="btn-secundario" onclick="reiniciar()">Reiniciar</button>
+            </div>
+
+            <section class="resultados" aria-labelledby="tituloResultados">
+                <div class="resultados-cabecera">
+                    <div>
+                        <span class="sobretitulo">RESUMEN DE LA SIMULACIÓN</span>
+                        <h2 id="tituloResultados">Resultados del crédito</h2>
+                    </div>
+                    <div class="icono-resultados" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 19V5m0 14h16M8 15l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="resultados-grid">
+                    <article class="resultado-item">
+                        <span>Interés generado</span>
+                        <strong id="lblInteresValor">USD 0.00</strong>
+                    </article>
+
+                    <article class="resultado-item">
+                        <span>Total a pagar</span>
+                        <strong id="lblTotalValor">USD 0.00</strong>
+                    </article>
+
+                    <article class="resultado-item resultado-destacado">
+                        <span>Cuota mensual</span>
+                        <strong id="lblCuotaValor">USD 0.00</strong>
+                    </article>
+                </div>
+
+                <div class="estado-credito">
+                    <span class="estado-indicador"></span>
+                    <div class="estado-texto">
+                        <span>Estado de crédito</span>
+                        <strong id="spnEstadoCredito">PENDIENTE DE CÁLCULO</strong>
+                    </div>
+                </div>
+
+                <p id="lblMensajeError" class="mensaje-error" role="alert"></p>
+            </section>
+        </section>
+
+        <footer class="pie">
+            <div class="pie-marca">
+                <span class="pie-punto"></span>
+                NEXORA <span class="pie-separador">|</span> FINANCIERA
+            </div>
+            <p>Simulación orientativa · Valores en USD</p>
+        </footer>
+    </main>
 </body>
 </html>
