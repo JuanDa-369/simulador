@@ -18,3 +18,15 @@ function calcularTotalPagar(monto, interes) {
     let total = monto + interes + 100;
     return total;
 }
+function calcularCuotaMensual(total, plazoAnios) {
+    let meses = plazoAnios * 12;
+    let cuota = total / meses;
+    return cuota;
+}
+function aprobarCredito(capacidadPago, cuotaMensual) {
+    if (capacidadPago > cuotaMensual) {
+        return true;
+    } else {
+        return false;
+    }
+}

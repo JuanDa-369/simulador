@@ -34,4 +34,18 @@ function calcular() {
 
     let etiquetaTotal = document.getElementById("spnTotalPrestamo");
     etiquetaTotal.textContent = totalPrestamo;
+
+    let cuota = calcularCuotaMensual(totalPrestamo, plazo);
+
+    let etiquetaCuota = document.getElementById("spnCuotaMensual");
+    etiquetaCuota.textContent = cuota;
+
+    let esAprobado = aprobarCredito(capacidadPago, cuota);
+
+    let etiquetaEstado = document.getElementById("spnEstadoCredito");
+    if (esAprobado == true) {
+        etiquetaEstado.textContent = "CREDITO APROBADO";
+    } else {
+        etiquetaEstado.textContent = "CREDITO RECHAZADO";
+    }
 }
