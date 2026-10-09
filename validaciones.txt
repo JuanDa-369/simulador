@@ -1,0 +1,8 @@
+----------------- PROMPTS DE IA ---------------------- SIMULADOR DE CRÉDITO --------
+
+---- SIMULADOR DE CRÉDITO ----
+#. PROMPT CREAR INTERFAZ Y VALIDACIONES
++Toma el rol de un programador y implementa un sistema de validaciones en JavaScript para el formulario de crédito
+que verifique campos obligatorios,tipos de datos numéricos y valores mínimos/máximos permitidos, 
+mostrando los mensajes de error específicos debajo de cada campo validado al hacer clic en el botón de cálculo
+y respetando estrictamente los IDs originales del proyecto.
