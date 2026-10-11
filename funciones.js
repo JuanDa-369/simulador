@@ -7,7 +7,7 @@ function calcularDisponible(ingresos, egresos){
     return disponible;
 }
 function calcularCapacidadPago(disponible) {
-    let capacidad = disponible * 0.5;
+    let capacidad = disponible * 0.3;
     return capacidad;
 }
 function calcularInteresSimple(monto, tasa, plazoAnios) {
